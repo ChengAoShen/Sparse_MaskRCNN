@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["F","E","W","N","I"]
+ignore = ["D"]
+
+fixable = ["ALL"]
+unfixable = []
+
+[tool.pyright]
+
