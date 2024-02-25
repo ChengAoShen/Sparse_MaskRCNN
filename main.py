@@ -2,7 +2,7 @@ import torch
 from torchvision.transforms import v2 as T
 
 import utils
-from data import CocoDataset
+from data import CocoDataset,CocoSparseDataset
 from engine import evaluate, train_one_epoch
 from model import get_model_instance_segmentation
 
@@ -18,13 +18,14 @@ def get_transform(train):
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 num_classes = 2
+
+dataset = CocoSparseDataset(
+    "./data/img/", "./data/coco/train.json", get_transform(train=True)
+)
 dataset = CocoDataset(
     "./data/img/", "./data/coco/train.json", get_transform(train=True)
 )
-# dataset_test = CocoDataset(
-#     "./data/img/", "./data/coco/train.json", get_transform(train=False)
-# )
-# define training and validation data loaders
+
 data_loader = torch.utils.data.DataLoader(
     dataset,
     batch_size=1,
@@ -32,14 +33,6 @@ data_loader = torch.utils.data.DataLoader(
     num_workers=4,
     collate_fn=utils.collate_fn,
 )
-
-# data_loader_test = torch.utils.data.DataLoader(
-#     dataset_test,
-#     batch_size=1,
-#     shuffle=False,
-#     num_workers=4,
-#     collate_fn=utils.collate_fn,
-# )
 
 # get the model using our helper function
 model = get_model_instance_segmentation(num_classes)
